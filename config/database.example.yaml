@@ -1,0 +1,16 @@
+local: &local
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 60
+
+development:
+  <<: *local
+  database: filejockey_dev
+
+test:
+  <<: *local
+  database: filejockey_test
+
+production:
+  <<: *local
+  database: filejockey_prod
