@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# set up a postgres docker container for testing
+
+_self=$(dirname -- "$(realpath -- "$0")")
+internal_data_dir="/var/lib/postgresql/data"
+pg_data_dir="$(realpath -- "$_self/../db")/pg_data"
+mkdir -p -- "$pg_data_dir"
+
+read -s -p 'Password for postgres user: ' pg_password
+
+# newline after collecting password
+echo
+
+echo "postgres data location: $pg_data_dir"
+
+docker run -d -v "$internal_data_dir:$pg_data_dir" -e POSTGRES_PASSWORD="$pg_password" -e PGDATA="$internal_data_dir/data" -p 5432:5432 --name postgres_filejockey postgres:11-alpine 
+
