@@ -2,6 +2,10 @@ local: &local
   adapter: postgresql
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 60
+  username: <%= ENV['RAILS_PG_USERNAME'] || Rails.application.credentials.dig(:postgres, :all, :username) %>
+  password: <%= ENV['RAILS_PG_PASSWORD'] || Rails.application.credentials.dig(:postgres, :all, :password) %>
+  host: <%= ENV['RAILS_PG_HOST'] || 'localhost' %>
+  port: 5432
 
 development:
   <<: *local
