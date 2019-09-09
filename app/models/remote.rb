@@ -1,0 +1,2 @@
+class Remote < ApplicationRecord
+end
