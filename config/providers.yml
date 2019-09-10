@@ -1,0 +1,11 @@
+# FileJockey base configuration
+providers:
+  remote:
+    - FileJockey::Remote::SFTP
+    - FileJockey::Remote::SFTPWithPGP
+    - FileJockey::Remote::FTP
+    - FileJockey::Remote::FTPWithPGP
+    - FileJockey::Remote::HTTPPost
+  repository:
+    - FileJockey::Repository::Local
+
