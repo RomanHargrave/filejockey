@@ -17,8 +17,8 @@ class Initial < ActiveRecord::Migration[6.0]
 
     # Jobs that copy a file from Repository to Remote
     create_table :jobs, id: :uuid do |t|
-      t.uuid   :repository_id, comment: 'Repository to collect file from'
-      t.uuid   :remote_id, comment: 'Remote to send file to'
+      t.belongs_to :remote, comment: 'Remote to send file to'
+      t.belongs_to :repository, comment: 'Repository to collect file from'
       t.string :source_file, comment: 'Source file specification, in repository-specified format'
       t.string :dest_file, comment: 'Destination file specification, in remote-specified format'
       t.string :name, comment: 'Job name'
