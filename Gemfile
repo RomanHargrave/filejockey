@@ -61,3 +61,6 @@ gem 'autoprefixer-rails'
 
 # use sidekiq for job queues
 gem 'sidekiq'
+
+# net-sftp is used for two of the providers
+gem 'net-sftp'
