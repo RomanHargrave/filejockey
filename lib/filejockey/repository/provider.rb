@@ -9,8 +9,10 @@ module FileJockey
 
          # Base constructor for Provider
          # @param [String] name Name of this provider instance, different from from self.name
-         def initialize(name)
-            @name = name
+         # @param [Hash] config Provider configuration data
+         def initialize(name, config)
+            @name   = name
+            @config = config
          end
 
          # Request, by provider-specified identity (filespec), a file from the repository
