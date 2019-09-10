@@ -58,3 +58,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'haml'
 gem 'foundation-rails'
 gem 'autoprefixer-rails'
+
+# use sidekiq for job queues
+gem 'sidekiq'
