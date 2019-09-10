@@ -26,13 +26,13 @@ class Initial < ActiveRecord::Migration[6.0]
       t.jsonb  :remote_options, comment: 'Additional parameters that are made available to the remote'
     end
 
-    # Completed/in-progress file transmissions
+    # Completed/scheduled/in-progress file transmissions
     create_table :transmissions, id: :uuid do |t|
-      t.uuid      :job_id, comment: 'Job that generated this transmission'
-      t.timestamp :start_time, index: true, comment: 'transmission start time'
-      t.timestamp :end_time, comment: 'transmission end time'
-      t.column    :status, :transmission_state, index: true, comment: 'transmission state (e.g. waiting, failed)'
-      t.string    :status_message, comment: 'free-form status message (e.g. could not connect)'
+      t.belongs_to :job
+      t.timestamp  :start_time, index: true, comment: 'Actual start time'
+      t.timestamp  :end_time, comment: 'Completion time'
+      t.column     :status, :transmission_state, index: true, comment: 'Transmission state (e.g. waiting, failed)'
+      t.string     :status_message, comment: 'Free-form status message (e.g. could not connect)'
     end
   end
 end
