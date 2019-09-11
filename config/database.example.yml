@@ -9,12 +9,12 @@ local: &local
 
 development:
   <<: *local
-  database: filejockey_dev
+  database: filerouter_dev
 
 test:
   <<: *local
-  database: filejockey_test
+  database: filerouter_test
 
 production:
   <<: *local
-  database: filejockey_prod
+  database: filerouter_prod

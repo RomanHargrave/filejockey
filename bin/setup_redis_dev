@@ -2,5 +2,4 @@
 
 # set up a redis docker container for testing
 
-docker run -d -p 6379:6379 --name redis_filejockey redis
-
+docker run -d -p 6379:6379 --name postgres_filerouter redis

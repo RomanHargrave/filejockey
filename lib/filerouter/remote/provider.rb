@@ -1,6 +1,6 @@
-# FileJockey remote provider
+# FileRouter remote provider
 # (C) 2019 Roman Hargrave <roman@hargrave.info>
-module FileJockey
+module FileRouter
    module Remote
 
       # Remote provider

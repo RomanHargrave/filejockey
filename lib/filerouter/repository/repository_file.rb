@@ -1,6 +1,6 @@
-# FileJockey Repo File Object
+# FileRouter Repo File Object
 # (C) 2019 Roman Hargrave
-module FileJockey
+module FileRouter
    module Repository
       # Represents a file as retrieved from a repository
       class RepositoryFile

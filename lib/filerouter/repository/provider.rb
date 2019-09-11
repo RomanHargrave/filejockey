@@ -1,6 +1,6 @@
-# FileJockey Repository Provider
+# FileRouter Repository Provider
 # (C) 2019 Roman Hargrave
-module FileJockey
+module FileRouter
    module Repository
 
       # Base class for Provider implementations

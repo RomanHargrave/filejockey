@@ -14,5 +14,5 @@ echo
 
 echo "postgres data location: $pg_data_dir"
 
-docker run -d -v "$internal_data_dir:$pg_data_dir" -e POSTGRES_PASSWORD="$pg_password" -e PGDATA="$internal_data_dir/data" -p 5432:5432 --name postgres_filejockey postgres:11-alpine 
+docker run -d -v "$internal_data_dir:$pg_data_dir" -e POSTGRES_PASSWORD="$pg_password" -e PGDATA="$internal_data_dir/data" -p 5432:5432 --name postgres_filerouter postgres:11-alpine 
 

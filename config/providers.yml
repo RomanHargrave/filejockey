@@ -1,11 +1,11 @@
-# FileJockey base configuration
+# FileRouter base configuration
 providers:
   remote:
-    - FileJockey::Remote::SFTP
-    - FileJockey::Remote::SFTPWithPGP
-    - FileJockey::Remote::FTP
-    - FileJockey::Remote::FTPWithPGP
-    - FileJockey::Remote::HTTPPost
+    - FileRouter::Remote::SFTP
+    - FileRouter::Remote::SFTPWithPGP
+    - FileRouter::Remote::FTP
+    - FileRouter::Remote::FTPWithPGP
+    - FileRouter::Remote::HTTPPost
   repository:
-    - FileJockey::Repository::Local
+    - FileRouter::Repository::Local
 
