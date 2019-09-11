@@ -21,7 +21,7 @@ module FileRouter
          end
 
          # Request to archive the file, which should prevent it from being retrieved again
-         def archive
+         def archive!
             raise NotImplementedError.new "This RepositoryFile cannot respond to #archive"
          end
 
@@ -102,19 +102,19 @@ module FileRouter
       end
 
 
-      # Error raised when a file is requested, exists, but is locked by another thread (locking strategy is up to provider)
-      class FileLockedError < RuntimeError
+      # Error raised when archiving is not supported
+      class ArchiveNotSupportedError < RuntimeError
          attr_reader :repository
-         attr_reader :message
+         attr_reader :name
 
-         # Create a new FileLockedError
+         # Create a new ArchiveNotSupportedError
          # @param [Provider] repo Repository provider implementation
          # @param [String] name Name of file
          def initialize(repo, name)
             raise ArgumentError.new("Parameter #1 is not a Repository::Provider") unless repo.is_a? Provider
 
             @repository = repo
-            @message    = "The requested file #{repo.name}/#{name} is locked, likely by a running job"
+            @message    = "The requested file #{repo.name}/#{name} is does not support archiving"
             super(@message)
          end
       end
