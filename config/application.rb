@@ -17,6 +17,18 @@ module Filerouter
        g.template_engine = :haml
     end
 
+    redis_url = ENV.fetch('REDIS_URL', 'redis://localhost:6379/1')
+
+    config.cache_store = :redis_cache_store, { url: redis_url }
+
+    Sidekiq.configure_server do |c|
+      c.redis = { url: redis_url }
+    end
+
+    Sidekiq.configure_client do |c|
+      c.redis = { url: redis_url }
+    end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
