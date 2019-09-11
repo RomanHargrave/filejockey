@@ -10,9 +10,10 @@ module FileRouter
          # Base constructor for Provider
          # @param [String] name Name of this provider instance, different from from self.name
          # @param [Hash] config Provider configuration data
-         def initialize(name, config)
+         def initialize(name, logger, config)
             @name   = name
             @config = config
+            @logger = logger
          end
 
          # Request, by provider-specified identity (filespec), a file from the repository
@@ -25,6 +26,11 @@ module FileRouter
          # Returns a descriptive, short name, which is used to represent the provider in the user interface
          def self.provider_name
             "Base Provider"
+         end
+
+         # Returns an array of supported features (such as archiving)
+         def self.features
+           []
          end
       end
 
