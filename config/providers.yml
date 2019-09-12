@@ -7,5 +7,5 @@ providers:
     - FileRouter::Remote::FTPWithPGP
     - FileRouter::Remote::HTTPPost
   repository:
-    - FileRouter::Repository::Local
+    - FileRouter::Repository::LocalDirectory
 
