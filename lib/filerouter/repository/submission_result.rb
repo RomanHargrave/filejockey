@@ -1,34 +1,9 @@
-# FileRouter remote provider
+# FileRouter repository submission result
 # (C) 2019 Roman Hargrave <roman@hargrave.info>
 module FileRouter
-   module Remote
+   module Repository
 
-      # Remote provider
-      class Provider
-         attr_reader :name
-
-         # Base constructor for the remote provider
-         # @param [String] name Provider name, different from ::name
-         # @param [Hash] config Provider configuration data
-         def initialize(name, config)
-            @config = config
-            @name   = name
-         end
-
-         # Submit a file to the remote.
-         # Accepts any IO object and produces a transmission result
-         # @param [String] filespec Destination file specification, such as a name or fully qualified path (per the remote requirements)
-         # @param [IO} io IO object to read file data from
-         def submit(filespec, io)
-            raise NotImplementedError.new "This remote implementation does not respond to #submit"
-         end
-
-         def self.name
-            "Base Remote"
-         end
-      end # class Provider
-
-      # Represents the result of a submission to a remote
+      # Represents the result of a submission to a repository
       class SubmissionResult
 
          # Transmission start time
@@ -53,17 +28,17 @@ module FileRouter
          # Remote-specific data (e.g. logs) in a Hash
          attr_reader :data
 
-         # The remote to which the file was submitted
-         attr_reader :remote
+         # The repository to which the file was submitted
+         attr_reader :repository
 
          # Create a SubmissionResult
-         # @param [Provider] remote Remote provider implementation
+         # @param [RepositoryProvider] repository Repository implementation
          # @param [Symbol] status Transmission status symbol (one of :failure, :partial, or :complete)
          # @param [DateTime] start_time Transmission start time
          # @param [DateTime] finish_time Transmission end time
          # @param [Hash] params other parameters (:file_name, :file_size, :message, :data)
-         def initialize(remote, status, start_time, finish_time, params)
-            raise ArgumentError.new("Parameter #1 is not a Remote::Provider") unless remote is_a? Provider
+         def initialize(repository, status, start_time, finish_time, params)
+            raise ArgumentError.new("Parameter #1 is not a RepositoryProvider") unless repository is_a? RepositoryProvider
             raise ArgumentError.new("Parameter #2 is not one of :failure, :partial, or :complete") unless [:failure, :partial, :complete] include? status
 
             @remote      = remote;

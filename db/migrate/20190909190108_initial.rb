@@ -1,18 +1,13 @@
 class Initial < ActiveRecord::Migration[6.0]
 
   def change
-    # Repositories to retrieve files from
+    # Repositories to retrieve files from, or to send them to
     create_table :repositories, id: :uuid do |t|
-      t.string    :provider_id, comment: 'ID of the provider implementation used by this instance'
-      t.string    :name, comment: 'name of this provider instance'
-      t.jsonb     :configuration, comment: 'implementation-defined settings'
-    end
-
-    # Remotes to send files to
-    create_table :remotes, id: :uuid do |t|
-      t.string :provider_id, comment: 'ID of the provider implementation used by this instance'
-      t.string :name, comment: 'name of the remote'
-      t.string :configuration, comment: 'implementation-defined settings'
+      t.string    :provider_id, comment: 'Provider ID'
+      t.string    :name, comment: 'Name of the repository instance'
+      t.jsonb     :configuration, comment: 'Provider-specific configuration'
+      t.boolean   :is_source, comment: 'Whether files may be retrieved from the repository'
+      t.boolean   :is_destination, comment: 'Whether files may be sent to the repository'
     end
 
     # Jobs that copy a file from Repository to Remote
