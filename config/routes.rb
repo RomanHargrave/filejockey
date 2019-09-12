@@ -1,3 +1,11 @@
+require 'sidekiq/web'
+require 'sidekiq-scheduler/web'
+
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  # In T&D, mount Sidekiq for debugging
+  unless Rails.env.production?
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
 end

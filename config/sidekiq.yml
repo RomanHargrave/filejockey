@@ -1,0 +1,9 @@
+:pidfile: ./tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+:queues:
+  - default
+  - system
+:schedule:
+  cache_cleanup:
+    every: 24h
+    class: CacheCleanupJob

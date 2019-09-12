@@ -10,11 +10,13 @@ module FileRouter
       # Base constructor for RepositoryFile
       # @param [Provider] repository Repo instance
       # @param [String] name Name of the file
-      def initialize(repository, name)
+      # @param [Logger] logger Logger
+      def initialize(repository, name, logger)
         raise ArgumentError.new("Parameter #1 is not a Repository::Provider") unless repository.is_a? Provider
 
         @repository = repository
         @name       = name
+        @logger     = logger
 
         # some idempotent value used to track lock state for a given file
         @lock_cache_key = "lock!#{self.to_s}"
@@ -37,7 +39,7 @@ module FileRouter
       # @return [true] if the file is locked
       # @return [false] if the file is not locked
       def is_locked?
-        Rails.cache.fetch(@lock_cache_key) do
+        Rails.cache.fetch(@lock_cache_key, expires_in: 120.hours) do
           false
         end
       end
@@ -50,7 +52,7 @@ module FileRouter
       def lock!
         raise FileLockedError.new(@repository, @name) if self.is_locked?
 
-        Rails.cache.write(@lock_cache_key, true)
+        Rails.cache.write(@lock_cache_key, true, expires_in: 120.hours)
       end
 
       # Release the lock on the file. This will return true/false depending on whether the file
@@ -61,7 +63,7 @@ module FileRouter
       # @return [false] if the file was not locked
       def release!
         old_state = self.is_locked?
-        Rails.cache.write(@lock_cache_key, false)
+        Rails.cache.write(@lock_cache_key, false, expires_in: 120.hours)
 
         old_state
       end
