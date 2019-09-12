@@ -1,11 +1,10 @@
 # FileRouter base configuration
 providers:
-  remote:
-    - FileRouter::Remote::SFTP
-    - FileRouter::Remote::SFTPWithPGP
-    - FileRouter::Remote::FTP
-    - FileRouter::Remote::FTPWithPGP
-    - FileRouter::Remote::HTTPPost
   repository:
+    - FileRouter::Repository::SFTP
+    - FileRouter::Repository::SFTPWithPGP
+    - FileRouter::Repository::FTP
+    - FileRouter::Repository::FTPWithPGP
+    - FileRouter::Repository::HTTPPost
     - FileRouter::Repository::LocalDirectory
 
