@@ -1,0 +1,9 @@
+# FileRouter builtin providers
+repository:
+  # - FileRouter::Repository::SFTP
+  # - FileRouter::Repository::SFTPWithPGP
+  # - FileRouter::Repository::FTP
+  # - FileRouter::Repository::FTPWithPGP
+  # - FileRouter::Repository::HTTPPost
+  - FileRouter::Repository::Builtin::LocalDirectory
+

@@ -1,2 +1,2 @@
-require 'builtin/local_directory'
-require 'builtin/local_file'
+require_relative 'builtin/local_directory'
+require_relative 'builtin/local_file'

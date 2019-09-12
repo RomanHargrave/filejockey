@@ -39,7 +39,7 @@ module FileRouter
          # @param [Hash] params other parameters (:file_name, :file_size, :message, :data)
          def initialize(repository, status, start_time, finish_time, params)
             raise ArgumentError.new("Parameter #1 is not a RepositoryProvider") unless repository is_a? RepositoryProvider
-            raise ArgumentError.new("Parameter #2 is not one of :failure, :partial, or :complete") unless [:failure, :partial, :complete] include? status
+            raise ArgumentError.new("Parameter #2 is not one of :failure, :partial, or :complete") unless [:failure, :partial, :complete].include? status
 
             @remote      = remote;
             @status      = status;

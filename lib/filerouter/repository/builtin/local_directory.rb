@@ -1,5 +1,5 @@
-require 'local_file'
 require 'fileutils'
+require_relative 'local_file'
 
 # FileRouter Local Repository
 # (C) 2019 Roman Hargrave <roman@hargrave.info>
