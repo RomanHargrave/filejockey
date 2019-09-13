@@ -1,5 +1,10 @@
 class Repository < ApplicationRecord
 
+  has_many :jobs, alias: :outgoing_jobs
+  has_many :jobs, alias: :incoming_jobs, through: :job_destination
+  has_many :transmissions, alias: :outgoing_transmissions, through: :job
+  has_many :transmissions, alias: :incoming_transmissions, through: :job_destination
+
   validates :provider_id, inclusion: {
     in: FileRouter.repositories.keys,
     message: "%{value} is not a known RepositoryProvider"
@@ -21,6 +26,8 @@ class Repository < ApplicationRecord
 
   validates :configuration, presence: true
 
+  validate :valid_configuration
+
   # Get the class object for the provider
   def provider_class
     FileRouter.repositories.fetch(self.provider_id, nil)
@@ -36,6 +43,13 @@ class Repository < ApplicationRecord
       Rails.cache.fetch("repository.#{self.id}", expires_in: 5.minutes) do
         inst.new(self.name, self.configiration)
       end
+    end
+  end
+
+  # Called by ActiveRecord to validate the provider configuration with the implementation-provided validator
+  def valid_configuration
+    self.provider_class.validate_configuration(self.configuration) do |err|
+      errors.add(:configuration, "Repository configuration field #{err[:field]} is invalid: #{err[:message]}")
     end
   end
 

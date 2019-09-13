@@ -67,18 +67,42 @@ module FileRouter
       # Parameters that should not be presented to the user should not be displayed here
       # The format of the Hash objects in this Array is as follows
       #
-      #   name:         string,   specifies the key of the item in the configuration hash (mandatory)
+      #   field:        string,   specifies the key of the item in the configuration hash (mandatory)
       #   display_name: string,   specifies the display name of the item in the UI (defaults to the value of :name)
-      #   type:         symbol,   :string, :boolean, etc... (defaults to :string)
+      #   type:         Class,    String, Boolean, etc... (defaults to :string)
       #   required:     boolean,  whether the field is mandatory (defaults to true)
       #   default:      Object,   default value of the field (defaults to Nil)
       def self.configuration_spec
         {}
       end
 
-      # Accepts the configuration hash that will be passed to the constructor and returns a Hash associating field names with errors
-      # Returning an empty 
+      # Accepts a provider configuration Hash and returns an array of Hash describing field-level errors
+      # The entries in this hash must be as follows
+      # 
+      #   field:    field name
+      #   message:  error/warning
       def self.validate_configuration(configuration)
+        spec = self.configuration_spec
+        errs = []
+
+        spec.accept {|o| configuration.include? o.field} .each do |opt|
+          field = configuration[opt.field]
+          unless field.is_a? opt.type
+            errs << {
+              field:    opt.field,
+              message:  "Expected a #{opt.type.name} but got a #{field.class.name}"
+            }
+            configuration.remove opt.field
+          end
+        end
+
+        errs.merge self._validate_configuration configuration
+      end
+
+      protected
+
+      def self._validate_configuration(configuration)
+        []
       end
     end
 

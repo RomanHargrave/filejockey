@@ -18,24 +18,26 @@ class Initial < ActiveRecord::Migration[6.0]
     end
 
     # Job destinations
-    create_table :job_destinations do |t|
-      t.belongs_to :job,        type: :uuid, null: false, index: true, comment: 'Job to which this destination belongs'
-      t.belongs_to :repository, type: :uuid, null: false, index: true, comment: 'Repository to send file to'
-      t.string     :filespec,   null: false, comment: 'Destination filespec'
+    create_table :job_destinations, id: :uuid do |t|
+      t.belongs_to :job,            type: :uuid, null: false, index: true, comment: 'Job to which this destination belongs'
+      t.belongs_to :repository,     type: :uuid, null: false, index: true, comment: 'Repository to send file to'
+      t.string     :friendly_name,  null: false, comment: 'Display name for the destination'
+      t.string     :filespec,       null: false, comment: 'Destination filespec'
     end
 
     # Job schedules
     create_table :job_schedules, id: :uuid do |t|
       t.belongs_to :job,            type: :uuid, null: false, index: true, comment: 'Job that this schedule will run'
-      t.timestamp  :scheduled_time, null: false, index: true,         comment: 'Scheduled run-time for the job'
+      t.timestamp  :scheduled_time, null: false, index: true,         comment: '(Next) Scheduled run-time for the job'
       t.boolean    :is_recurring,   null: false, default: true,       comment: 'Whether this is a recurring schedule'
       t.interval   :recur_interval, null: false, default: 15.minutes, comment: 'Interval at which the schedule recurs'
     end
 
     # Completed/scheduled/in-progress file transmissions
     create_table :transmissions, id: :uuid do |t|
+      t.belongs_to :job,              type: :uuid, null: false, index: true, comment: 'Job that generated this transmission'
+      t.belongs_to :job_destination,  type: :uuid, null: false, index: true, comment: 'Job destintation that this transmission was sent to'
       t.belongs_to :job_schedule,     type: :uuid, null: true,  index: true, comment: 'Schedule that created this transmission'
-      t.belongs_to :repository,       type: :uuid, null: false, index: true, comment: 'Repository that received the file'
       t.timestamp  :start_time,       null: false, index: true,  comment: 'Actual start time'
       t.timestamp  :end_time,         null: true,  index: false, comment: 'Completion time'
       t.string     :status_message,   null: true,  comment: 'Free-form status message (e.g. could not connect)'

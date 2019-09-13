@@ -80,9 +80,16 @@ module FileRouter
 
         def self.configuration_spec
           [
-            { name: 'archive_directory', type: :string,  required: false },
-            { name: 'allow_overwrite',   type: :boolean, required: true, default: false }
+            { field: 'directory',         type: String,  required: true  },
+            { field: 'archive_directory', type: String,  required: false },
+            { field: 'allow_overwrite',   type: Boolean, required: true, default: false }
           ]
+        end
+
+        protected
+
+        def self._validate_configuration(configuration)
+          []
         end
       end # class LocalDirectory
     end # module Local
