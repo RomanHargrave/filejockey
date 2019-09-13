@@ -1,0 +1,2 @@
+class TransmissionsController < ApplicationController
+end
