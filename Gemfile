@@ -58,9 +58,15 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
+# use Haml for templating
 gem 'haml-rails'
+
+# use foundation CSS
 gem 'foundation-rails'
 gem 'autoprefixer-rails'
+
+# it's basically impossible to get a BASIC ICON FONT in 2019 because everyone is using polymer or react
+gem 'material_design_icons'
 
 # use sidekiq for job queues
 gem 'sidekiq'
