@@ -20,7 +20,7 @@ module FileRouter
       provider = classname.constantize
 
       if provider < FileRouter::Repository::RepositoryProvider
-        Rails.logger.info "Registered repository #{provider.provider_name} v#{provider.provider_version.join('.')} as class #{classname}"
+        Rails.logger.info "Registered repository #{provider.provider_name} (#{provider.provider_id}) v#{provider.provider_version.join('.')} as class #{classname}"
         provider
       else
         Rails.logger.error "Could not load repository provider #{classname} because it does not inherit FileRouter::Repository::RepositoryProvider"
@@ -30,7 +30,5 @@ module FileRouter
       Rails.logger.error "Could not load repository provider #{classname} because the named class does not exist"
       nil
     end
-  end.reject do |it|
-    it.nil?
-  end
+  end.reject {|x| x.nil?} .map {|x| [x.provider_id, x]} .to_h
 end
