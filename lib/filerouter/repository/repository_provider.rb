@@ -64,8 +64,21 @@ module FileRouter
       end
 
       # Array of Hash describing configuration parameters, which will be used to generate the user interface
+      # Parameters that should not be presented to the user should not be displayed here
+      # The format of the Hash objects in this Array is as follows
+      #
+      #   name:         string,   specifies the key of the item in the configuration hash (mandatory)
+      #   display_name: string,   specifies the display name of the item in the UI (defaults to the value of :name)
+      #   type:         symbol,   :string, :boolean, etc... (defaults to :string)
+      #   required:     boolean,  whether the field is mandatory (defaults to true)
+      #   default:      Object,   default value of the field (defaults to Nil)
       def self.configuration_spec
         {}
+      end
+
+      # Accepts the configuration hash that will be passed to the constructor and returns a Hash associating field names with errors
+      # Returning an empty 
+      def self.validate_configuration(configuration)
       end
     end
 
