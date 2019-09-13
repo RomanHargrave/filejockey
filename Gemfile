@@ -62,6 +62,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'haml-rails'
 
 # use foundation CSS
+gem 'jquery-rails', '~> 4.3.5'
 gem 'foundation-rails'
 gem 'autoprefixer-rails'
 
@@ -73,6 +74,12 @@ gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'sidekiq-unique-jobs'
 gem 'sinatra', require: nil
+
+# Pagination helper
+gem 'pagy', '~> 3.5'
+
+# Wizard building library
+gem 'wicked', '~> 1.3.3'
 
 # net-sftp is used for two of the providers
 gem 'net-sftp'
