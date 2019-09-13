@@ -80,7 +80,6 @@ module FileRouter
 
         def self.configuration_spec
           [
-            { name: 'name',              type: :string,  required: true  },
             { name: 'archive_directory', type: :string,  required: false },
             { name: 'allow_overwrite',   type: :boolean, required: true, default: false }
           ]
