@@ -8,4 +8,4 @@
 
 #fr-info-tabs.tabs-content{'data-tabs-content' => 'fr-info-tabs-header'}
   .tabs-panel.is-active#tab-repo-providers
-    = render partial: 'repo_providers', locals: { repos: FileRouter.repositories }
+    = render partial: 'repo_providers', locals: { repos: FileRouter::Repository::Registry.contents }

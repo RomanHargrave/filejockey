@@ -6,7 +6,7 @@ class Repository < ApplicationRecord
   has_many :transmissions, as: :incoming_transmissions, through: :job_destination
 
   validates :provider_id, inclusion: {
-    in: FileRouter.repositories.keys,
+    in: FileRouter::Repository::Registry.contents.keys,
     message: "%{value} is not a known RepositoryProvider"
   }
 
@@ -30,7 +30,7 @@ class Repository < ApplicationRecord
 
   # Get the class object for the provider
   def provider_class
-    FileRouter.repositories.fetch(self.provider_id, nil)
+    FileRouter::Repository::Registry.contents.fetch(self.provider_id, nil)
   end
 
   # Instantiate a provider from the record

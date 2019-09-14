@@ -1,7 +1,7 @@
 class RepositoriesController < ApplicationController
 
   def available_providers
-    render 'select_provider', locals: { providers: FileRouter.repositories }
+    render 'select_provider', locals: { providers: FileRouter::Repository::Registry.contents }
   end
 
   def list

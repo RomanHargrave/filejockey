@@ -92,6 +92,8 @@ module FileRouter
           []
         end
       end # class LocalDirectory
+
+      Registry.register(LocalDirectory)
     end # module Local
   end # module Repository
 end # module FileRouter
