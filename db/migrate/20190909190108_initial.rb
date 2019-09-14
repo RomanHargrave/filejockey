@@ -41,7 +41,7 @@ class Initial < ActiveRecord::Migration[6.0]
       t.timestamp  :start_time,       null: false, index: true,  comment: 'Actual start time'
       t.timestamp  :end_time,         null: true,  index: false, comment: 'Completion time'
       t.string     :status_message,   null: true,  comment: 'Free-form status message (e.g. could not connect)'
-      t.text       :extendend_status, null: true,  comment: 'Extended status, e.g. log messages'
+      t.bjson      :log_messages,     null: true,  comment: 'structured log entries'
       t.column     :status, :transmission_state, index: true, comment: 'Transmission state (e.g. waiting, failed)'
     end
   end
