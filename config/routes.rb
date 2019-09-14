@@ -8,4 +8,14 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  get '/', to: 'dashboard#overview'
+
+  get '/repositories',      to: 'repositories#list'
+  get '/repositories/new',  to: 'repositories#new'
+
+  get '/jobs',          to: 'jobs#list'
+  get '/transmissions', to: 'transmissions#list'
+  get '/audit',         to: 'audit#home'
+  get '/system',        to: 'system#home'
+
 end

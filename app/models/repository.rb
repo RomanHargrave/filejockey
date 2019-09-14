@@ -1,9 +1,9 @@
 class Repository < ApplicationRecord
 
-  has_many :jobs, alias: :outgoing_jobs
-  has_many :jobs, alias: :incoming_jobs, through: :job_destination
-  has_many :transmissions, alias: :outgoing_transmissions, through: :job
-  has_many :transmissions, alias: :incoming_transmissions, through: :job_destination
+  has_many :jobs, as: :outgoing_jobs
+  has_many :jobs, as: :incoming_jobs, through: :job_destination
+  has_many :transmissions, as: :outgoing_transmissions, through: :job
+  has_many :transmissions, as: :incoming_transmissions, through: :job_destination
 
   validates :provider_id, inclusion: {
     in: FileRouter.repositories.keys,
@@ -13,13 +13,13 @@ class Repository < ApplicationRecord
   validates :is_source, inclusion: {
     in: [false],
     message: "The repository implementation does not support source functionality",
-    unless: self.provider_class.features.include? :retrieve
+    unless: Proc.new { |inst| inst.provider_class.features.include? :retrieve }
   }
 
   validates :is_destination, inclusion: {
     in: [false],
     message: "The repository implementation does not support destination functionality",
-    unless: self.provider_class.features.include? :submit
+    unless: Proc.new { |inst| inst.provider_class.features.include? :submit }
   }
 
   validates :name, presence: true

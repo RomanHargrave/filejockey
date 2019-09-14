@@ -1,0 +1,27 @@
+%nav.sidebar
+  %ul.menu.vertical{'data-dropdown-menu' => nil}
+    %li
+      %a{href: '/'}
+        = mdi_tag('chart-timeline-variant')
+        = translate 'Dashboard'
+    %li
+      %a{href: '/repositories'}
+        = mdi_tag('folder')
+        = translate 'Repositories'
+    %li
+      %a{href: '/jobs'}
+        = mdi_tag('wrench')
+        = translate 'Jobs'
+    %li
+      %a{href: '/transmissions'}
+        = mdi_tag('history')
+        = translate 'Transmissions'
+    %li
+      %a{href: '/audit'}
+        = mdi_tag('eye-outline')
+        = translate 'Audit'
+    %li
+      %a{href: '/system'}
+        = mdi_tag('tune')
+        = translate 'System'
+

@@ -58,16 +58,30 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
+# use Haml for templating
+gem 'haml-rails'
+
 gem 'react-rails'
-gem 'haml'
+
+# use foundation CSS
+gem 'jquery-rails', '~> 4.3.5'
 gem 'foundation-rails'
 gem 'autoprefixer-rails'
+
+# it's basically impossible to get a BASIC ICON FONT in 2019 because everyone is using polymer or react
+gem 'material_design_icons'
 
 # use sidekiq for job queues
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'sidekiq-unique-jobs'
 gem 'sinatra', require: nil
+
+# Pagination helper
+gem 'pagy', '~> 3.5'
+
+# Wizard building library
+gem 'wicked', '~> 1.3.3'
 
 # net-sftp is used for two of the providers
 gem 'net-sftp'

@@ -15,7 +15,7 @@ module FileRouter
 
   public
 
-  repositories = PROVIDERS['repository'].map do |classname|
+  @@repositories = PROVIDERS['repository'].map do |classname|
     begin
       provider = classname.constantize
 
@@ -31,4 +31,8 @@ module FileRouter
       nil
     end
   end.reject {|x| x.nil?} .map {|x| [x.provider_id, x]} .to_h
+
+  def self.repositories
+    @@repositories
+  end
 end
