@@ -8,92 +8,107 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Divider,
   Grid,
-  Paper
+  Card,
+  CardContent,
+  Divider,
+  Chip,
+  Box
 } from '@material-ui/core'
 
 import { makeStyles } from '@material-ui/core/styles'
 
-const componentStyle = makeStyles(t => ({
+const componentStyle = makeStyles(theme => ({
   group: {
     width: 100
   },
-
   preformat: {
     fontFamily: 'monospace'
+  },
+  card: {
+    margin: theme.spacing(1)
+  },
+  chipSet: {
+    marginTop: theme.spacing(1)
+  },
+  chip: {
+    marginRight: theme.spacing(0.5)
+  },
+  versionText: {
+    float: 'right'
+  },
+  paramTable: {
+    marginTop: theme.spacing(1)
   }
 }));
 
 export default function RepositoryProviderInfo(props) {
-  const classes = componentStyle();
+  const { name, providerId, version, features, parameters, ...other } = props;
+  const css = componentStyle();
+
+  const paramTable = (
+    <Table size="small" className={css.paramTable}>
+      <TableHead>
+        <TableRow>
+          <TableCell>Field</TableCell>
+          <TableCell>Required</TableCell>
+          <TableCell>Type</TableCell>
+          <TableCell>Default</TableCell>
+          <TableCell>Description</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {parameters.map((p) => (
+          <TableRow key={p.field}>
+            <TableCell className={css.preformat}>
+              {p.field}
+            </TableCell>
+            <TableCell>
+              {p.required}
+            </TableCell>
+            <TableCell>
+              {p.type}
+            </TableCell>
+            <TableCell className={css.preformat}>
+              {p.default}
+            </TableCell>
+            <TableCell>
+              {p.description}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 
   return (
-    <Grid container spacing={3} direction="column">
-      {/* Basic Information */}
-      <Grid item xs={1}>
-        <Paper className={classes.group}>
-          <Typography varient='h5'>
-            Provider Information
-          </Typography>
-
-          <Table size="small">
-            <TableBody>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell align="right">{props.providerId}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Version</TableCell>
-                <TableCell align="right">{props.version.join('.')}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Features</TableCell>
-                <TableCell align="right">{props.features.join(', ')}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Paper>
-      </Grid>
-
-      <Grid item xs={1}>
-        {/* List of configuration options */}
-
-        <Typography variant="h5">
-          Parameters
+    <Card className={css.card}>
+      <CardContent>
+        {/* Grid is used here to split the first line of the card b/t name and version */}
+        <Grid container spacing={1}>
+          <Grid item xs={10}>
+            <Typography variant="h5" component="h2">
+              {name}
+            </Typography>
+          </Grid>
+          <Grid item xs={2} zeroMinWidth>
+            <Typography className={css.versionText} variant="body2" component="span" color="textSecondary" align="right">
+              {"v" + version.join(".")}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Typography variant="body2" component="span" className={css.preformat} color="textSecondary" gutterBottom>
+          {providerId}
         </Typography>
 
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Field</TableCell>
-              <TableCell>Required</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Default</TableCell>
-              <TableCell>Description</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.parameters.map((p) => (
-              <TableRow key={p.field}>
-                <TableCell className={classes.preformat}>
-                  {p.field}
-                </TableCell>
-                <TableCell>
-                  {p.required}
-                </TableCell>
-                <TableCell className={classes.preformat}>
-                  {p.default}
-                </TableCell>
-                <TableCell>
-                  {p.description}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Grid>
-    </Grid>
+        {/* Chips for feature names */}
+        <Box className={css.chipSet}>
+          {features.map(name => (<Chip size="small" className={css.chip} label={name} key={name} />))}
+        </Box>
+
+        {paramTable}
+      </CardContent>
+    </Card>
   );
 }
 

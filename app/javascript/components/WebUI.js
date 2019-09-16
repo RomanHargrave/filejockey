@@ -1,3 +1,7 @@
+/**
+ * FileRouter WebUI
+ * (C) 2019 Roman Hargrave <roman@hargrave.info>
+ */
 import React from "react"
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 
@@ -11,11 +15,29 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton
 } from "@material-ui/core"
 
-// Primary app components
-import AppBar from './AppBar'
+import {
+  Menu as MenuIcon,
+  Timeline as TimelineIcon,
+  SettingsApplications as SettingsIcon,
+  SyncAlt as SyncIcon,
+  Folder as FolderIcon,
+  Event as EventIcon
+} from "@material-ui/icons"
+
+// Route components
+import Dashboard     from "./Dashboard"
+import Repositories  from "./repositories/Repositories"
+import Jobs          from "./jobs/Jobs"
+import Transmissions from "./transmissions/Transmissions"
+import SystemInfo    from "./system/SystemInfo"
 
 // Set up theme
 const theme = createMuiTheme({
@@ -46,8 +68,7 @@ const appChromeStyle = makeStyles(theme => ({
   },
   menuDrawer: {
     minWidth: 240,
-    flexShrink: 1,
-    zIndex: theme.zIndex.drawer
+    flexShrink: 1
   },
   menuDrawerPaper: {
     minWidth: 240
@@ -58,44 +79,122 @@ const appChromeStyle = makeStyles(theme => ({
   root: {
     display: "flex"
   },
+  menuButton: {
+    marginRight: theme.spacing(2)
+  },
+  appBarTitle: {
+    flexGow: 1
+  },
   toolbar: theme.mixins.toolbar
 }));
 
+// Menu Items
+const routes = [
+  {
+    key: "nav-dashboard",
+    icon: (<TimelineIcon />),
+    name: "Dashboard",
+    path: "/",
+    exact: true,
+    component: Dashboard
+  },
+  {
+    key: 'nav-repos',
+    icon: (<FolderIcon />),
+    name: "Repositories",
+    path: "/repositories",
+    exact: false,
+    component: Repositories
+  },
+  {
+    key: "nav-jobs",
+    icon: (<EventIcon />),
+    name: "Jobs",
+    path: "/jobs",
+    exact: false,
+    component: Jobs
+  },
+  {
+    key: "nav-transmissions",
+    icon: (<SyncIcon />),
+    name: "Transmissions",
+    path: "/transmissions",
+    exact: false,
+    component: Transmissions
+  },
+  {
+    key: "nav-system",
+    icon: (<SettingsIcon />),
+    name: "System",
+    path: "/system",
+    component: SystemInfo,
+    exact: false
+  }
+];
+
 export default function WebUI() {
   const css = appChromeStyle();
+
   const menu = (
     <React.Fragment>
       {/* This is a hack to offset the starting position of the menu list by the height of the appbar */}
       <div className={css.toolbar} />
       <List>
-        <ListItem button>
-          <ListItemText>Test</ListItemText>
-        </ListItem>
+        {routes.map((item) => (
+          <ListItem key={item.key} component={Link} {...{ to: item.path }} button>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText>{item.name}</ListItemText>
+          </ListItem>
+        ))}
       </List>
     </React.Fragment>
   );
 
-  return (
-    <div className={css.root}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <AppBar classes={{appBar: css.appBar}} zIndex={theme.zIndex.drawer + 1}/>
-        {/* Hidden on xsDown - drawer is open */}
-        <Hidden xsDown implementation="css">
-          <Drawer variant="permanent" open className={css.menuDrawer} classes={{paper: css.menuDrawerPaper}}>
-            {menu}
-          </Drawer>
-        </Hidden>
-        {/* Hidden on small+ - drawer is retracted */}
+  const bar = (
+    <AppBar className={css.appBar}>
+      <Toolbar>
         <Hidden smUp implementation="css">
-          <Drawer className={css.menuDrawer} classes={{paper: css.menuDrawerPaper}}>
-            {menu}
-          </Drawer>
+          <IconButton edge="start" className={css.menuButton} color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton>
         </Hidden>
-        <main className={css.content}>
-        </main>
-      </ThemeProvider>
-    </div>
+        <Typography variant="h6" className={css.appBarTitle}>
+          FileRouter
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
+
+  const content = routes.map((item) => (
+    <Route key={item.key} path={item.path} exact={item.exact} component={item.component} {...{api: '/api'}} />
+  ));
+
+  return (
+    <Router>
+      <div className={css.root}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {bar}
+          {/* Hidden on xsDown - drawer is open */}
+          <Hidden xsDown implementation="css">
+            <Drawer variant="permanent" open className={css.menuDrawer} classes={{paper: css.menuDrawerPaper}}>
+              {menu}
+            </Drawer>
+          </Hidden>
+          {/* Hidden on small+ - drawer is retracted */}
+          <Hidden smUp implementation="css">
+            <Drawer className={css.menuDrawer} classes={{paper: css.menuDrawerPaper}}>
+              {menu}
+            </Drawer>
+          </Hidden>
+          <main className={css.content}>
+            {/* This is a hack to offset the starting position of the content to accomodate the appbar */}
+            <div className={css.toolbar} />
+            {content}
+          </main>
+        </ThemeProvider>
+      </div>
+    </Router>
   );
 }
 
