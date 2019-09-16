@@ -64,7 +64,7 @@ export default function RepositoryProviderInfo(props) {
               {p.field}
             </TableCell>
             <TableCell>
-              {p.required}
+              {p.required ? "required" : "optional"}
             </TableCell>
             <TableCell>
               {p.type}
