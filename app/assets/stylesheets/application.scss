@@ -10,71 +10,15 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require materialdesignicons
  *= require_tree .
  *= require_self
  */
 
-@import "foundation_and_overrides";
-
-$chrome-background: darken($control-background, 10%);
+// $chrome-background: darken($control-background, 10%);
 
 // Reset page sizing
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-}
-
-// Lay out the top-level elements left-to-right
-body {
-  display: flex;
-  flex-direction: row;
-}
-
-// sidebar menu
-nav.sidebar {
-  width: max-content;
-  height: 100%;
-  background-color: $chrome-background;
-
-  ul.menu {
-    li:hover {
-      background-color: lighten($chrome-background, 10%);
-    }
-  }
-}
-
-// Page header to distinguish "chrome" from informational content
-section.main {
-  width: 100%;
-}
-
-section.page-header {
-  background-color: $chrome-background;
-  width: 100%;
-  padding: 5px 10px;
-  margin-bottom: 10px;
-}
-
-section.content {
-  padding: 10px;
-}
-
-// The icon font (gem: material_design_icons) does not reset the baseline on i.mdi and
-// it looks like garbage
-i.mdi {
-  line-height: 0px;
-  vertical-align: middle;
-}
-
-i.mdi + span {
-  margin-left: 5px;
-}
-
-// Menu enhancements
-ul.menu.vertical {
-  li {
-    padding: 5px;
-  }
 }

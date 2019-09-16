@@ -63,14 +63,6 @@ gem 'haml-rails'
 
 gem 'react-rails'
 
-# use foundation CSS
-gem 'jquery-rails', '~> 4.3.5'
-gem 'foundation-rails'
-gem 'autoprefixer-rails'
-
-# it's basically impossible to get a BASIC ICON FONT in 2019 because everyone is using polymer or react
-gem 'material_design_icons'
-
 # use sidekiq for job queues
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
