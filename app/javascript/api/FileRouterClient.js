@@ -39,11 +39,16 @@ export default class FileRouterClient {
   }
 
   requestPaged(params) {
-    params.baseURL = this.api_base;
-    params.headers ||= {};
-    params.headers['Accept-Version'] = this.api_version;
+    const { request, transform } = params;
+    request.baseURL = this.api_base;
+    request.headers ||= {};
+    request.headers['Accept-Version'] = this.api_version;
 
-    return new ResultPage(params);
+    return new ResultPage({
+      axios: this.axios,
+      request: request,
+      transform: transform
+    });
   }
 
   static get apiVersion() {
