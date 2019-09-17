@@ -1,4 +1,5 @@
 class Repository < ApplicationRecord
+  include ActiveModel::Serializers::JSON
 
   has_many :jobs, as: :outgoing_jobs
   has_many :jobs, as: :incoming_jobs, through: :job_destination
@@ -53,4 +54,14 @@ class Repository < ApplicationRecord
     end
   end
 
+  def attributes
+    {
+      'id'             => nil,
+      'provider_id'    => nil,
+      'name'           => nil,
+      'configuration'  => {},
+      'is_source'      => false,
+      'is_destination' => false
+    }
+  end
 end

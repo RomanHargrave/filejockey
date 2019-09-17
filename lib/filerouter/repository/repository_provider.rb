@@ -73,7 +73,7 @@ module FileRouter
       #   required:     boolean,  whether the field is mandatory (defaults to true)
       #   default:      Object,   default value of the field (defaults to Nil)
       def self.configuration_spec
-        {}
+        []
       end
 
       # Accepts a provider configuration Hash and returns an array of Hash describing field-level errors
@@ -85,18 +85,18 @@ module FileRouter
         spec = self.configuration_spec
         errs = []
 
-        spec.accept {|o| configuration.include? o.field} .each do |opt|
-          field = configuration[opt.field]
-          unless field.is_a? opt.type
+        spec.select {|o| configuration.include? o[:field]} .each do |opt|
+          field = configuration[opt[:field]]
+          unless field.is_a? opt[:type]
             errs << {
-              field:    opt.field,
-              message:  "Expected a #{opt.type.name} but got a #{field.class.name}"
+              field:    opt[:field],
+              message:  "Expected a #{opt[:type].name} but got a #{field.class.name}"
             }
-            configuration.remove opt.field
+            configuration.remove opt[:field]
           end
         end
 
-        errs.merge self._validate_configuration configuration
+        errs.concat self._validate_configuration configuration
       end
 
       protected

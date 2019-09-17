@@ -1,2 +1,2 @@
 # Pagy-related initializer
-require 'pagy/extras/foundation'
+require 'pagy/extras/headers'

@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     namespace :providers do
       get '/repositories', to: 'repositories#list'
     end
+
+    resource :repositories
+
     get '/*path', to: proc { [404, {}, ['']] }
   end
 
