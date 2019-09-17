@@ -16,6 +16,21 @@ export class RepositoryResource extends Resource {
     this.client = client;
   }
 
+  async findRep(params) {
+    return this.client.requestPaged({
+      request: {
+        url: RepositoryResource.resourcePath,
+        params: params
+      }
+    });
+  }
+
+  find(params) {
+    const pagedRequest = this.findRep(params);
+    pagedRequest.transform = (data) => (new Repository());
+    return pagedRequest;
+  }
+
   async getRep(params) {
     const { id } = params;
 
@@ -79,7 +94,7 @@ export default class Repository {
     return this.id;
   }
 
-  reload() {
+  async reload() {
     this._rep = await this.resource.getRep(this.id);
   }
 
