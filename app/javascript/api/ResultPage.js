@@ -1,4 +1,4 @@
-import axios as axiosDefault from "axios"
+import { axios as axiosDefault } from "axios"
 /**
  * Result Pager
  * Streamlines pagy interaction
@@ -17,7 +17,7 @@ export default class ResultPage {
     this.axios        = axios || axiosDefault;
     this.request_orig = Object.assign({}, request); // Make a copy of the request, because we will change its contents
     this.request      = Object.assign({}, request); // This will be used for state, the previous will be used for paging
-    this.transform    = transform || (page)                                                                            = > page;
+    this._transform   = transform || ((page) => page);
 
     this.request.headers  ||= {};
 
@@ -33,11 +33,23 @@ export default class ResultPage {
   /**
    * Return this page of the response
    */
-  async get response() {
+  async getResponse() {
     if (!this._response) {
       this._response = await this.axios(this.config)
     }
     return this.response;
+  }
+
+  get response() {
+    return getResponse();
+  }
+
+  get transform() {
+    return this._transform;
+  }
+
+  set transform(f) {
+    this._transform = f;
   }
 
   get data() {
