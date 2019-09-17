@@ -45,6 +45,7 @@ module.exports = function(api) {
     ].filter(Boolean),
     plugins: [
       require('babel-plugin-macros'),
+      require('@babel/plugin-proposal-logical-assignment-operators').default,
       require('@babel/plugin-syntax-dynamic-import').default,
       isTestEnv && require('babel-plugin-dynamic-import-node'),
       require('@babel/plugin-transform-destructuring').default,
