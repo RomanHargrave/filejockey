@@ -1,6 +1,8 @@
 FileRouter
 ==========
 
-FileRouter is a basic EDI exchanger intended primarily for dispatching already-generated
-bank transaction files to their correct destinations as well as providing a single-pane-of
-glass monitoring interface for those operations.
+FileRouter is a project intended to build a usable B2B file transfer gateway.
+It works around the concept of Repositories, Jobs, and Transmissions.
+
+Jobs are created and scheduled to copy files from a source repository in to one or more destinations,
+creting a transmission record for monitoring purposes.
