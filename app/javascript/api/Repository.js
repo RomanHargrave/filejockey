@@ -11,23 +11,21 @@ export class RepositoryResource extends Resource {
   get name() { return "Repository"; }
 
   constructor(params) {
-    const { client } = params;
-
-    this.client = client;
+    super(params);
   }
 
-  async findRep(params) {
+  findRep(params) {
     return this.client.requestPaged({
       request: {
         url: RepositoryResource.resourcePath,
-        params: params
+        params: { criteria: params }
       }
     });
   }
 
   find(params) {
     const pagedRequest = this.findRep(params);
-    pagedRequest.transform = (data) => (new Repository());
+    pagedRequest.transform = (data) => data.map((rec) => new Repository(rec));
     return pagedRequest;
   }
 

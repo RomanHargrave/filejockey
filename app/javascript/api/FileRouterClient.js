@@ -11,38 +11,37 @@ import ResultPage from './ResultPage'
 
 export default class FileRouterClient {
   constructor(params) {
-    const { base_path } = params;
+    const { baseURL } = params || {};
 
-    this.api_base    = base_path || '/api';
-    this.api_version = FileRouterAPI.apiVersion();
-    this.resources   = {};
-    this.axios       = axios.create({
-      baseURL: this.api_base
+    this.apiBase    = baseURL || '/api';
+    this.apiVersion = FileRouterClient.apiVersion;
+    this.resources  = {};
+    this.axios      = axios.create({
+      baseURL: this.apiBase
     });
 
-    this.addResource(RepositoryProviderResource);
     this.addResource(RepositoryResource);
   }
 
   addResource(cls) {
-    const resource = new cls({ client: this });
+    const resource = new cls({ apiClient: this });
     this.resources[resource.name] = resource;
     this[`get${resource.name}Resource`] = () => resource;
   }
 
   request(params) {
-    params.baseURL = this.api_base;
+    params.baseURL = this.apiBase;
     params.headers ||= {};
-    params.headers['Accept-Version'] = this.api_version;
+    params.headers['Accept-Version'] = this.apiVersion;
 
     return this.axios(params);
   }
 
   requestPaged(params) {
     const { request, transform } = params;
-    request.baseURL = this.api_base;
+    request.baseURL = this.apiBase;
     request.headers ||= {};
-    request.headers['Accept-Version'] = this.api_version;
+    request.headers['Accept-Version'] = this.apiVersion;
 
     return new ResultPage({
       axios: this.axios,

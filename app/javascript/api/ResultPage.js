@@ -17,82 +17,88 @@ export default class ResultPage {
     this.axios        = axios || axiosDefault;
     this.request_orig = Object.assign({}, request); // Make a copy of the request, because we will change its contents
     this.request      = Object.assign({}, request); // This will be used for state, the previous will be used for paging
-    this._transform   = transform || ((page) => page);
+    this._transform   = transform || (page => page);
 
-    this.request.headers  ||= {};
+    this.request.params ||= {};
 
     if (items) {
-      this.request.headers['Page-Items'] = items;
+      this.pageSize = items;
     }
 
     if (page) {
-      this.request.headers['Current-Page'] = page;
+      this.page = page;
     }
   }
 
   /**
-   * Return this page of the response
+   * Get the transform function
+   */
+  get transform() { return this._transform; }
+
+  /**
+   * Set the transform function.
+   * @param f Function - Undefined/false can be given to reset the transform to an identity function
+   */
+  set transform(f) { this._transform = f || (x => x); }
+
+  /**
+   * Set the request page
+   * @param page Page number
+   */
+  set page(page) {
+    this._response = undefined;
+
+    // Pagy uses 1-based pages, but MUI uses zero.
+    // It's more convenient to use zero-based numbers and convert them.
+    this.request.params.page = page + 1;
+  }
+
+  /**
+   * Set the (zero-based!) page size
+   * @param size Page size (items/page)
+   */
+  set pageSize(size) {
+    this._response = undefined;
+    this.request.params.pageSize = size;
+  }
+
+  /**
+   * Return promise to yield raw repsonse object
+   * Client code should not call this, and instead prefer the wrapper methods:
+   *  - getData()
+   *  - getCurrentPage()
+   *  - getPageCount()
+   *  - getResultCount()
+   *  - getItemsPerPage()
    */
   async getResponse() {
     if (!this._response) {
-      this._response = await this.axios(this.config)
+      this._response = await this.axios(this.request)
     }
-    return this.response;
+    return await this._response;
   }
 
-  get response() {
-    return getResponse();
+  /**
+   * Get response data after having run it through the transform function
+   */
+  async getData() {
+    return this.transform((await this.getResponse()).data);
   }
 
-  get transform() {
-    return this._transform;
+  async getCurrentPage() {
+    return parseInt((await this.getResponse()).headers['current-page'], 10);
   }
 
-  set transform(f) {
-    this._transform = f;
+  async getPageCount() {
+    return parseInt((await this.getResponse()).headers['total-pages'], 10);
   }
 
-  get data() {
-    return this.transform(this.response.data);
+  async getResultCount() {
+    return parseInt((await this.getResponse()).headers['total-count'], 10);
   }
 
-  get currentPage() {
-    return this.response.headers['Current-Page'];
-  }
-
-  set currentPage(page) {
-    this._response = undefined;
-    this.request.headers['Current-Page'] = page;
-  }
-
-  get pages() {
-    return this.response.headers['Total-Pages'];
-  }
-
-  get count() {
-    return this.response.headers['Total-Count'];
-  }
-
-  getItemsPerPage() {
-    return this.repsonse.headers['Page-Items'];
-  }
-
-  setItemsPerPage(items) {
-    this._response = undefined;
-    this.request.headers['Page-Items'] = items;
-  }
-
-  nextPage() {
-    const nextPage = new ResultPage({
-      axios: this.axios,
-      request: this.request,
-      transform: this.transform,
-      items: this.request.headers['Page-Items']
-    });
-
-    nextPage.currentPage = this.currentPage + 1
-
-    return nextPage;
+  async getItemsPerPage() {
+    return parseInt((await this.getResponse()).headers['page-items'], 10);
   }
 }
 

@@ -4,7 +4,10 @@
  */
 export default class Resource {
 
-  constructor() {}
+  constructor(params) {
+    const { apiClient } = params;
+    this.client = apiClient;
+  }
 
   /**
    * Get the name, used by the FileRouterClient to create getXXXResource methods
@@ -15,7 +18,7 @@ export default class Resource {
   /**
    * Given an implementation-defined parameter object, retrieve a paged list of matching representations
    */
-  async findRep(params) {}
+  findRep(params) {}
 
   /**
    * Given an implementation-defined parameter ebject, retrieve a paged list of matching model objects
