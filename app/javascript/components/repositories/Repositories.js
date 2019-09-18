@@ -8,6 +8,12 @@ import MaterialTable from "material-table"
 export default function Repositories(props) {
   const {client} = props;
 
+  function getRepositories(query) {
+    const page = client
+      .getRepositoryResource()
+      .find(query);
+  }
+
   return (
     <MaterialTable
       icons={MaterialTableIcons}
