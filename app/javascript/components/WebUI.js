@@ -39,6 +39,9 @@ import Jobs          from "./jobs/Jobs"
 import Transmissions from "./transmissions/Transmissions"
 import SystemInfo    from "./system/SystemInfo"
 
+// API Client
+import FileRouterClient from "api/FileRouterClient"
+
 // Set up theme
 const theme = createMuiTheme({
   palette: {
@@ -135,6 +138,9 @@ const routes = [
 export default function WebUI() {
   const css = appChromeStyle();
 
+  const apiClient = new FileRouterClient();
+
+
   const menu = (
     <React.Fragment>
       {/* This is a hack to offset the starting position of the menu list by the height of the appbar */}
@@ -166,8 +172,14 @@ export default function WebUI() {
   );
 
   const content = routes.map((item) => (
-    <Route key={item.key} path={item.path} exact={item.exact} component={item.component} {...{api: '/api'}} />
+    <Route
+      key={item.key}
+      path={item.path}
+      exact={item.exact}
+      render={() => <item.component apiClient={apiClient} />}
+    />
   ));
+
 
   return (
     <Router>
