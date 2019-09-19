@@ -176,10 +176,9 @@ export default function WebUI() {
       key={item.key}
       path={item.path}
       exact={item.exact}
-      render={() => <item.component apiClient={apiClient} />}
+      render={(p) => <item.component apiClient={apiClient} {...p} />}
     />
   ));
-
 
   return (
     <Router>

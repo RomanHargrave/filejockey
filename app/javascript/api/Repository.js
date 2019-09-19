@@ -1,95 +1,20 @@
 import Resource from './Resource'
 
 /**
- * Repository API Object
+ * Repository API Response Model
  * (C) 2019 Roman Hargrave <roman@hargrave.info>
  */
-export class RepositoryResource extends Resource {
-
-  static get resourcePath() { return "/repositories"; }
-
-  get name() { return "Repository"; }
-
-  constructor(params) {
-    super(params);
-  }
-
-  findRep(params) {
-    return this.client.requestPaged({
-      request: {
-        url: RepositoryResource.resourcePath,
-        params: { criteria: params }
-      }
-    });
-  }
-
-  find(params) {
-    const pagedRequest = this.findRep(params);
-    pagedRequest.transform = (data) => data.map((rec) => new Repository(rec));
-    return pagedRequest;
-  }
-
-  async getRep(params) {
-    const { id } = params;
-
-    const result = await this.client.request({
-      url: `${RepositoryResource.resourcePath}/${id}`
-    });
-
-    return result.data;
-  }
-
-  get(params) {
-    const { id } = params;
-    return new Repository({
-      id: id,
-      resource: this,
-      client: this.client
-    });
-  }
-
-  async createOrUpdate(rep) {
-    if (rep.id) {
-      const resp = await this.client.request({
-        method: 'PUT',
-        url: `${RepositoryResource.resourcePath}/${rep.id}`,
-        data: rep
-      });
-
-      return resp.data;
-    } else {
-      const resp = await this.client.request({
-        method: 'POST',
-        url: RepositoryResource.resourcePath,
-        data: rep
-      });
-
-      return resp.data;
-    }
-  }
-
-  async delete(rep) {
-    if (rep.id) {
-      await this.client.request({
-        method: 'DELETE',
-        url: `${RepositoryResource.resourcePath}/${rep.id}`
-      });
-    }
-  }
-}
-
 export default class Repository {
 
-  construct(params) {
-    const { id, client, resource, rep } = params;
-
-    this.id       = id;
+  constructor(params) {
+    const { id, resource, rep } = params;
+    this._id      = id;
     this.resource = resource;
     this._rep     = rep;
   }
 
   get id() {
-    return this.id;
+    return this._id;
   }
 
   async reload() {
@@ -153,4 +78,90 @@ export default class Repository {
     return this.client.getRepositoryProviderResource().get(this.providerId);
   }
 
+}
+
+/**
+ * Repository API Object
+ * (C) 2019 Roman Hargrave <roman@hargrave.info>
+ */
+export class RepositoryResource extends Resource {
+
+  static get resourcePath() { return "/repositories"; }
+
+  get name() { return "Repository"; }
+
+  constructor(params) {
+    super(params);
+  }
+
+  findRep(criteria, params) {
+    return this.client.requestPaged({
+      request: {
+        url: RepositoryResource.resourcePath,
+        params: Object.assign({ criteria: criteria }, params)
+      }
+    });
+  }
+
+  find(criteria, params) {
+    const pagedRequest = this.findRep(criteria, params);
+    pagedRequest.transform =
+      (data) =>
+        data.map((rep) => 
+          new Repository({
+            id: rep.id,
+            rep: rep,
+            resource: this
+          }));
+    return pagedRequest;
+  }
+
+  async getRep(criteria, params) {
+    const { id } = criteria;
+
+    const result = await this.client.request({
+      url: `${RepositoryResource.resourcePath}/${id}`,
+      params: params || {}
+    });
+
+    return result.data;
+  }
+
+  get(criteria) {
+    const { id } = criteria;
+    return new Repository({
+      id: id,
+      resource: this,
+      client: this.client
+    });
+  }
+
+  async createOrUpdate(rep) {
+    if (rep.id) {
+      const resp = await this.client.request({
+        method: 'PUT',
+        url: `${RepositoryResource.resourcePath}/${rep.id}`,
+        data: rep
+      });
+
+      return resp.data;
+    } else {
+      const resp = await this.client.request({
+        method: 'POST',
+        url: RepositoryResource.resourcePath,
+        data: rep
+      });
+
+      return resp.data;
+    }
+  }
+
+  async delete(rep) {
+    if (rep.id) {
+      await this.client.request({
+        method: 'DELETE',
+        url: `${RepositoryResource.resourcePath}/${rep.id}`
+      });
+    }
+  }
 }

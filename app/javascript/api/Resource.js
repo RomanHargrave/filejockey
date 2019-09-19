@@ -18,22 +18,22 @@ export default class Resource {
   /**
    * Given an implementation-defined parameter object, retrieve a paged list of matching representations
    */
-  findRep(params) {}
+  findRep(criteria, params) {}
 
   /**
    * Given an implementation-defined parameter ebject, retrieve a paged list of matching model objects
    */
-  find(params) {}
+  find(criteria, params) {}
 
   /**
    * Given an implementation-defined parameter object, retrieve the primitive representation of the resource
    */
-  async getRep(params) {}
+  async getRep(criteria, params) {}
 
   /**
    * Given an implementation-defined parameter object, return a model object of the resource
    */
-  get(params) {}
+  get(criteria, params) {}
 
   /**
    * Given the desired primitive representation of the resource, create or update the resource and return the

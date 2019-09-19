@@ -1,50 +1,21 @@
 import React from "react"
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import Client from "api/FileRouterClient"
+import GenerateRoutes from 'components/shared/GenerateRoutes'
 
-import MaterialTableIcons from "components/MaterialTableIcons"
-import MaterialTable from "material-table"
+// Route components
+import RepositoryList from './RepositoryList'
 
-export default function Repositories(props) {
-  const { apiClient } = props;
+const routes = [
+  { path: '', exact: true, component: RepositoryList, key: 'display-repo-list' }
+];
 
-  const columns = [
-    { title: "Name", field: "name" }
-  ];
-
-  function getRepositories(query) {
-    return new Promise(async (resolve, reject) => {
-      const pager = apiClient
-        .getRepositoryResource()
-        .find(query.search);
-
-      // Set the request page before executing
-      pager.page      = query.page;
-      pager.pageSize  = query.pageSize;
-
-      // Execute the request
-      const data      = await pager.getData();
-      const pageNum   = await pager.getCurrentPage();
-      const pageCount = await pager.getPageCount();
-
-      const rows = data.map((repo) => {
-        name: repo.name
-      });
-
-      resolve({
-        data: rows,
-        page: pageNum - 1,
-        totalCount: pageCount - 1
-      });
-    });
-  }
+export default function Repositories({ apiClient, match }) {
 
   return (
-    <MaterialTable
-      icons={MaterialTableIcons}
-      title="Configured Repositories"
-      data={getRepositories}
-      columns={columns}
-    />
+    <React.Fragment>
+      <GenerateRoutes basePath={match.path} routes={routes} addParams={{apiClient: apiClient}} />
+    </React.Fragment>
   );
+
 }

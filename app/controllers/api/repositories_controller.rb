@@ -8,7 +8,7 @@ class Api::RepositoriesController < ApplicationController
     query = Repository.where(
       "provider_id ILIKE :criteria OR name ILIKE :criteria",
       { criteria:  "%#{params.fetch(:criteria, "")}%" }
-    ).order(params.fetch(:orderBy, 'name'))
+    ).order(params.fetch(:orderBy, 'name') => params.fetch(:order, 'desc').to_sym)
 
     @pagy, result = pagy(query, items: params.fetch(:pageSize, 20))
 
