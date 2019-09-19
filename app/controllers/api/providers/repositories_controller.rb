@@ -1,4 +1,5 @@
 class Api::Providers::RepositoriesController < ApplicationController
+  protect_from_forgery with: :null_session
 
   def _provider_to_hash(provider)
     {
@@ -11,24 +12,25 @@ class Api::Providers::RepositoriesController < ApplicationController
           field:    spec[:field],
           type:     spec.fetch(:type, String).name,
           required: spec.fetch(:required, false),
-          default:  spec.fetch(:default, nil).to_s,
-          hints:    spec.fetch(:hints, {})
+          default:  spec.fetch(:default, nil).to_s
         }
       end
     }
   end
 
+  # Respond with a single provider
   def show
     if FileRouter::Repository::Registry.contents.include? params[:id]
       render json: {
         status: 'ok',
-        data: _provider_to_hash(FileRouter::Repository::Registry.get params[:id])
+        data: _provider_to_hash(FileRouter::Repository::Registry.contents[params[:id]])
       }
     else
       render status: 404
     end
   end
 
+  # Respond with a list of providers
   def list
     render json: {
       status: 'ok',
@@ -36,12 +38,27 @@ class Api::Providers::RepositoriesController < ApplicationController
     }
   end
 
+  # Respond with an MSON form specification for the provider configuration
+  def mson
+    if FileRouter::Repository::Registry.contents.include? params[:id]
+      provider   = FileRouter::Repository::Registry.contents[params[:id]]
+
+      render json: {
+        status: 'ok',
+        data: provider.form_mson({})
+      }
+    else
+      render status: 404
+    end
+  end
+
+  # Validate the passed configuration and respond with a list of errors
   def validate_config
     if FileRouter::Repository::Registry.contents.include? params[:id]
-      provider = FileRouter::Repository::Registry.get params[:id]
+      provider = FileRouter::Repository::Registry.contents[params[:id]]
 
       begin
-        config = JSON.parse(params[:data])
+        config = JSON.parse(request.body.read)
 
         errs = provider.validate_configuration config
 
@@ -49,7 +66,7 @@ class Api::Providers::RepositoriesController < ApplicationController
           status: 'ok',
           data: errs
         }
-      rescue JSON::ParseError => e
+      rescue JSON::ParserError => e
         render json: {
           status: 'error',
           code: 400,
