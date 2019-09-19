@@ -20,7 +20,7 @@ function TabPanel(props) {
   );
 }
 
-export default function SystemInfo(props) {
+export default function SystemInfo({ apiClient }) {
   const [activeTab, setActiveTab] = React.useState(0);
 
   function onTabSelect(e, newVal) {
@@ -35,7 +35,7 @@ export default function SystemInfo(props) {
         </Tabs>
       </AppBar>
       <TabPanel selectedIndex={activeTab} index={0}>
-        <RepositoryProviderInfoList api={props.api} />
+        <RepositoryProviderInfoList apiClient={apiClient} />
       </TabPanel>
     </React.Fragment>
   );

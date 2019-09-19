@@ -10,7 +10,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :providers do
-      get '/repositories', to: 'repositories#list'
+      get  '/repositories',               to: 'repositories#list'
+      get  '/repositories/:id',           to: 'repositories#show'
+      post '/repositories/:id/validate',  to: 'repositories#validate_config'
     end
 
     resource :repositories

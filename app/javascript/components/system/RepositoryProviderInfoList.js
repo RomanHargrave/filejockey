@@ -16,8 +16,7 @@ import {
 import PopupSnackbar from '../shared/PopupSnackbar'
 import RepositoryProviderInfo from './RepositoryProviderInfo'
 
-export default function RepositoryProviderInfoList(props) {
-  const { api, ...others } = props;
+export default function RepositoryProviderInfoList({ apiClient }) {
 
   const [providers, setProviders]   = React.useState([]);
   const [loadFailed, setLoadFailed] = React.useState(false);
@@ -26,8 +25,8 @@ export default function RepositoryProviderInfoList(props) {
   React.useEffect(() => {
     async function loadProviders() {
       try {
-        let resp = await axios.get("/providers/repositories", { baseURL: api || '/api' });
-        setProviders(resp.data);
+        const res = apiClient.getRepositoryProviderResource();
+        setProviders(await res.find().getData());
       } catch (e) {
         console.log(e);
         setLoadFailed(true);

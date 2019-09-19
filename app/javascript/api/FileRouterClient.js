@@ -6,6 +6,7 @@
 import axios from "axios"
 
 import { RepositoryResource, Repository } from './Repository'
+import { RepositoryProviderResource, RepositoryProvider } from './RepositoryProvider'
 
 import ResultPage from './ResultPage'
 
@@ -20,7 +21,7 @@ function processResponseEnvelope(envelope_raw) {
 
     if (envelope.status !== undefined) {
       if (envelope.status === 'error') {
-        throw `Error${' ' + envelope.status || ''}: ${envelope.message || 'The endpoint responded with an error condition but did not provide a message'}`;
+        throw `Error${' ' + envelope.code || ''}: ${envelope.message || 'The endpoint responded with an error condition but did not provide a message'}`;
       } else {
         return (envelope.data !== undefined) ? envelope.data : {};
       }
@@ -51,6 +52,7 @@ export default class FileRouterClient {
     });
 
     this.addResource(RepositoryResource);
+    this.addResource(RepositoryProviderResource);
   }
 
   addResource(cls) {
