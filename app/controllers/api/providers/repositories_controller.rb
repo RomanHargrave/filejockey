@@ -11,7 +11,8 @@ class Api::Providers::RepositoriesController < ApplicationController
           field:    spec[:field],
           type:     spec.fetch(:type, String).name,
           required: spec.fetch(:required, false),
-          default:  spec.fetch(:default, nil).to_s
+          default:  spec.fetch(:default, nil).to_s,
+          hints:    spec.fetch(:hints, {})
         }
       end
     }
