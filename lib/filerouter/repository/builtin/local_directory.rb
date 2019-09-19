@@ -80,9 +80,9 @@ module FileRouter
 
         def self.configuration_spec
           [
-            { field: 'directory',         type: String,  required: true  },
-            { field: 'archive_directory', type: String,  required: false },
-            { field: 'allow_overwrite',   type: Boolean, required: true, default: false }
+            { field: 'directory',         type: String,  required: true,  hints: { input: :textField }},
+            { field: 'archive_directory', type: String,  required: false, hints: { input: :textField }},
+            { field: 'allow_overwrite',   type: Boolean, required: true, default: false, hints: { input: :toggle }}
           ]
         end
 
