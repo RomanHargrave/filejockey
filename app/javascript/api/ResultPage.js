@@ -1,4 +1,5 @@
 import { axios as axiosDefault } from "axios"
+
 /**
  * Result Pager
  * Streamlines pagy interaction
@@ -86,19 +87,19 @@ export default class ResultPage {
   }
 
   async getCurrentPage() {
-    return parseInt((await this.getResponse()).headers['current-page'], 10);
+    return parseInt((await this.getResponse()).headers['current-page'] || '0', 10);
   }
 
   async getPageCount() {
-    return parseInt((await this.getResponse()).headers['total-pages'], 10);
+    return parseInt((await this.getResponse()).headers['total-pages'] || '1', 10);
   }
 
   async getResultCount() {
-    return parseInt((await this.getResponse()).headers['total-count'], 10);
+    return parseInt((await this.getResponse()).headers['total-count'] || '0', 10);
   }
 
   async getItemsPerPage() {
-    return parseInt((await this.getResponse()).headers['page-items'], 10);
+    return parseInt((await this.getResponse()).headers['page-items'] || '0', 10);
   }
 }
 
