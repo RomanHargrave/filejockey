@@ -85,61 +85,61 @@ export default function RepositoryForm({ apiClient, onChange, onSubmit, lockProv
   }
 
   return (
-        <Grid container spacing={1}>
-          <Grid item xs={6}>
-            <TextField
-              className={css.inputBase}
-              label="Name"
-              required={true}
-              value={state.name}
-              onChange={handleChange('name')}
+    <Grid container spacing={1}>
+      <Grid item xs={6}>
+        <TextField
+          className={css.inputBase}
+          label="Name"
+          required={true}
+          value={state.name}
+          onChange={handleChange('name')}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControl disabled={lockProvider} className={css.inputBase}>
+          <InputLabel htmlFor="provider-select">Repository Type</InputLabel>
+          <Select
+            required={true}
+            value={state.provider_id}
+            onChange={handleChange('provider_id')}
+            inputProps={{ id: "provider-select" }}
+          >
+            {providers.map((p) => <MenuItem key={p.providerId} value={p.providerId}>{p.name}</MenuItem>)}
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          className={css.inputBase}
+          label="Available as a Source"
+          control={
+            <Checkbox
+              checked={state.is_source}
+              onChange={handleToggle('is_source')}
             />
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl disabled={lockProvider} className={css.inputBase}>
-              <InputLabel htmlFor="provider-select">Repository Type</InputLabel>
-              <Select
-                required={true}
-                value={state.provider_id}
-                onChange={handleChange('provider_id')}
-                inputProps={{ id: "provider-select" }}
-              >
-                {providers.map((p) => <MenuItem key={p.providerId} value={p.providerId}>{p.name}</MenuItem>)}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControlLabel
-              className={css.inputBase}
-              label="Available as a Source"
-              control={
-                <Checkbox
-                  checked={state.is_source}
-                  onChange={handleToggle('is_source')}
-                />
-              }
+          }
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          className={css.inputBase}
+          label="Available as a Destination"
+          control={
+            <Checkbox
+              checked={state.is_destination}
+              onChange={handleToggle('is_destination')}
             />
-          </Grid>
-          <Grid item xs={6}>
-            <FormControlLabel
-              className={css.inputBase}
-              label="Available as a Destination"
-              control={
-                <Checkbox
-                  checked={state.is_destination}
-                  onChange={handleToggle('is_destination')}
-                />
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            {/* This is a dynamically generated form. The provider will have a form schema which may be rendered by this component */}
-            <RJSForm schema={providerForm} formData={state.configuration} onChange={rjsfChanged}>
-              {/* Insert an empty fragment to replace the action buttons from the RJS form */}
-              <React.Fragment />
-            </RJSForm>
-          </Grid>
-        </Grid>
+          }
+        />
+      </Grid>
+      <Grid item xs={12}>
+        {/* This is a dynamically generated form. The provider will have a form schema which may be rendered by this component */}
+        <RJSForm schema={providerForm} formData={state.configuration} onChange={rjsfChanged}>
+          {/* Insert an empty fragment to replace the action buttons from the RJS form */}
+          <React.Fragment />
+        </RJSForm>
+      </Grid>
+    </Grid>
   );
 }
 
