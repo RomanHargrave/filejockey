@@ -45,7 +45,7 @@ class Api::Providers::RepositoriesController < ApplicationController
 
       render json: {
         status: 'ok',
-        data: provider.form_mson({})
+        data: provider.form_spec({})
       }
     else
       render status: 404

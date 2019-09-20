@@ -59,27 +59,32 @@ module FileRouter
     # self.configuration_spec
     def self.form_spec(values)
       components = {
-        nil       => 'TextField',
-        String    => 'TextField',
-        Boolean   => 'BooleanField',
-        DateTime  => 'dateField',
-        Numeric   => 'numberField',
-        Float     => 'numberField',
-        Integer   => 'integerField'
+        nil       => 'string',
+        String    => 'string',
+        Boolean   => 'boolean',
+        DateTime  => 'string',
+        Float     => 'string',
+        Integer   => 'integer'
       }
 
       if self.respond_to? :_form_spec
         self._form_spec
       else
-        self.configuration_spec.map do |spec|
-          {
-            component: components.fetch(spec.fetch(:type, nil), 'TextField'),
-            required:  spec.fetch(:required, false),
-            label:     spec.fetch(:name, spec[:field]),
-            value:     values.fetch(spec[:field], spec.fetch(:default, nil)),
-            name:      spec[:field]
-          }.merge(spec.dig(:form, :params) || {})
+        # Compile a list of required field names
+        required_fields = self.configuration_spec.select {|s| s.fetch(:required, false)} .map {|s| s[:field]}
+        field_list      = self.configuration_spec.map do |s|
+          [s[:field], {
+            type:     components[s.fetch(:type, String)],
+            title:    s.fetch(:name, s[:field]),
+            default:  s.fetch(:default, nil)
+          }]
         end
+
+        {
+          type: 'object',
+          required: required_fields,
+          properties: Hash[*field_list.flatten]
+        }
       end
     end
 
