@@ -31,12 +31,15 @@ const formStyle = makeStyles(theme => ({
  * A form for creating/editing Repository instances.
  * The formData prop is designed to match the serialized rep of the Repository instance
  */
-export default function RepositoryForm({ apiClient, onChange, onSubmit, lockProvider, formData }) {
+export default function RepositoryForm({ apiClient, onChange, lockProvider, formData }) {
   const css = formStyle();
 
+  const [provider,     setProvider]     = React.useState(null);
   const [providers,    setProviders]    = React.useState([]);
   const [providerForm, setProviderForm] = React.useState({});
   const [state,        setState]        = React.useState(formData);
+  const [canSend,      setCanSend]      = React.useState(true);
+  const [canReceive,   setCanReceive]   = React.useState(true);
 
   // Load provider list on mount
   React.useEffect(() => {
@@ -52,22 +55,38 @@ export default function RepositoryForm({ apiClient, onChange, onSubmit, lockProv
     loadProviders();
   }, []);
 
-  // Reload the provider form when the provider_id changes
+  // Based on the selected provider, enable or disable source/dest checkboxes
   React.useEffect(() => {
-    // Load the form schema for a provider
-    async function loadProviderForm(id) {
-      setProviderForm(
-        await apiClient
-          .getRepositoryProviderResource()
-          .getForm(id)
-      );
+    async function loadForm(provider) {
+      setProviderForm(await provider.getForm());
     }
 
+    if (provider) {
+      loadForm(provider);
+      setCanSend(provider.features.includes('retrieve'));
+      setCanReceive(provider.features.includes('submit'));
+
+      // Also unset as appropriate
+      setState({...state,
+        is_source:      (state.is_source && canSend),
+        is_destination: (state.is_destination && canReceive)
+      });
+    }
+  }, [provider]);
+
+  // Reload the provider form when the provider_id changes
+  React.useEffect(() => {
     if (state.provider_id !== '') {
-      loadProviderForm(state.provider_id);
+      setProvider(providers.find(p => p.id == state.provider_id));
     }
   }, [state.provider_id]);
 
+  // Hit the onchange callback when state is altered
+  React.useEffect(() => {
+    if (onChange) {
+      onChange(state);
+    }
+  }, [state]);
 
   // Default component change handler
   const handleChange = name => event => {
@@ -112,6 +131,7 @@ export default function RepositoryForm({ apiClient, onChange, onSubmit, lockProv
         <FormControlLabel
           className={css.inputBase}
           label="Available as a Source"
+          disabled={!canSend}
           control={
             <Checkbox
               checked={state.is_source}
@@ -124,6 +144,7 @@ export default function RepositoryForm({ apiClient, onChange, onSubmit, lockProv
         <FormControlLabel
           className={css.inputBase}
           label="Available as a Destination"
+          disabled={!canReceive}
           control={
             <Checkbox
               checked={state.is_destination}

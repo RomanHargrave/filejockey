@@ -3,7 +3,7 @@ import React from "react"
 import MaterialTableIcons from "components/MaterialTableIcons"
 import MaterialTable from "material-table"
 
-export default function RepositoryList({ apiClient }) {
+export default function RepositoryList({ apiClient, tableRef }) {
   const columns = [
     { title: "Name",        field: "name" },
     { title: "Source",      field: "is_source" },
@@ -13,8 +13,6 @@ export default function RepositoryList({ apiClient }) {
 
   function getRepositories(query) {
     return new Promise(async (resolve, reject) => {
-      console.log(query);
-
       const orderParams = {};
       if (query.orderBy) {
         orderParams.orderBy = query.orderBy.field;
@@ -36,9 +34,9 @@ export default function RepositoryList({ apiClient }) {
 
       const rows = data.map((repo) => ({
         name:           repo.name,
-        is_source:      repo.is_source ? 'Yes' : 'No',
-        is_destination: repo.is_destination ? 'Yes' : 'No',
-        provider_id:    repo.provider_id,
+        is_source:      repo.isSource ? 'Yes' : 'No',
+        is_destination: repo.isDestination ? 'Yes' : 'No',
+        provider_id:    repo.providerId,
         _model:         repo
       }));
 
@@ -52,6 +50,7 @@ export default function RepositoryList({ apiClient }) {
 
   return (
     <MaterialTable
+      tableRef={tableRef}
       icons={MaterialTableIcons}
       title="Configured Repositories"
       data={getRepositories}

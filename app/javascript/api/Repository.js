@@ -35,8 +35,8 @@ export default class Repository {
 
   async save() {
     const resp = await this.resource.createOrUpdate(this.rep);
-    this._id = resp.id;
-    this.reload();
+    this._rep = resp;
+    this._id  = resp.id;
   }
 
   delete() {

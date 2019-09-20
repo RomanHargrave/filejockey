@@ -1,4 +1,5 @@
 class Api::RepositoriesController < ApplicationController
+  protect_from_forgery with: :null_session
 
   after_action {
     pagy_headers_merge(@pagy) if @pagy
@@ -16,9 +17,20 @@ class Api::RepositoriesController < ApplicationController
   end
 
   def create
-    rep  = JSON.parse(params[:data])
-    new  = Repository.new(rep)
-    render json: new.as_json
+    begin
+      rep = JSON.parse(request.body.read)
+      rec = Repository.create(rep)
+      render json: {
+        status: 'ok',
+        data: rec.as_json
+      }
+    rescue => e
+      render json: {
+        status: 'error',
+        code: 500,
+        message: e
+      }
+    end
   end
 
   def update
