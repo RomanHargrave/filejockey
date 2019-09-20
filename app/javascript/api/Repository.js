@@ -18,7 +18,11 @@ export default class Repository {
   }
 
   async reload() {
-    this._rep = await this.resource.getRep(this.id);
+    if (this._id) {
+      this._rep = await this.resource.getRep(this.id);
+    } else {
+      this._rep = {};
+    }
   }
 
   get rep() {
@@ -29,8 +33,10 @@ export default class Repository {
     return this._rep;
   }
 
-  save() {
-    this.resource.createOrUpdate(this.rep);
+  async save() {
+    const resp = await this.resource.createOrUpdate(this.rep);
+    this._id = resp.id;
+    this.reload();
   }
 
   delete() {
@@ -38,9 +44,18 @@ export default class Repository {
   }
 
   get providerId() { return this.rep.provider_id; }
+  set providerId(id) {
+    if (this.rep._id) {
+      throw "The provider for a repository can not be changed once it has been saved";
+    } else {
+      this.rep.provider_id = id;
+    }
+  }
 
   get name() { return this.rep.name; }
   set name(n) { this.rep.name = n; }
+
+  get isNew() { return this._id === undefined; }
 
   setName(n) {
     this.name = n;
