@@ -1,1 +1,1 @@
-require 'filerouter/repository'
+require 'filerouter'

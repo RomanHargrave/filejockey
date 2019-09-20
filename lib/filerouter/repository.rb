@@ -1,3 +1,4 @@
+require_relative './configurable'
 require_relative 'repository/registry'
 require_relative 'repository/repository_provider'
 require_relative 'repository/repository_file'
