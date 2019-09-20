@@ -50,6 +50,13 @@ export default class RepositoryProvider {
   async validateConfiguration(configuration) {
     return await this.resource.validateConfiguration(this.id, configuration);
   }
+
+  /**
+   * Get the JSForm document for this provider
+   */
+  async getForm() {
+    return await this.resource.getForm(this.id);
+  }
 }
 
 /**
@@ -58,22 +65,23 @@ export default class RepositoryProvider {
  */
 export class RepositoryProviderResource extends Resource {
 
-  static get resourcePath() { return "/providers/repositories"; }
-
-  static urlFor(id) {
-    return UrlJoin(RepositoryProviderResource.resourcePath, id);
-  }
-
   constructor(params) {
     super(params);
   }
+
+  get resourcePath() { return "/providers/repositories"; }
+
+  urlFor(id) {
+    return UrlJoin(this.resourcePath, id);
+  }
+
 
   get name() { return "RepositoryProvider"; }
 
   findRep(criteria, params) {
     return this.client.requestPaged({
       request: {
-        url: RepositoryProviderResource.resourcePath,
+        url: this.resourcePath,
         params: Object.assign({ criteria: criteria }, params)
       }
     });
@@ -96,7 +104,7 @@ export class RepositoryProviderResource extends Resource {
     const { id } = criteria;
 
     const result = await this.client.request({
-      url: `${RepositoryProviderResource.resourcePath}/${id}`,
+      url: this.urlFor(id),
       params: params || {}
     });
 
@@ -126,6 +134,17 @@ export class RepositoryProviderResource extends Resource {
       method: 'post',
       data: configuration
     });
+
+    return response.data;
+  }
+
+  /**
+   * Get the JSForm configuration document for the provider with `id`
+   */
+  async getForm(id) {
+    const formEndpoint = UrlJoin(this.urlFor(id), 'form');
+
+    const response = await this.client.request({url: formEndpoint});
 
     return response.data;
   }

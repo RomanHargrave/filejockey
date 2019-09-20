@@ -5,6 +5,7 @@ import { Add as AddIcon } from '@material-ui/icons'
 
 import CornerFAB from 'components/shared/CornerFAB'
 import GenerateRoutes from 'components/shared/GenerateRoutes'
+import RepositoryForm from './RepositoryForm'
 
 // Route components
 import RepositoryList from './RepositoryList'
@@ -21,8 +22,9 @@ function AddRepository({ apiClient }) {
 }
 
 const routes = [
-  { path: '', exact: true, component: RepositoryList, key: 'display-repo-list'  },
-  { path: '', exact: true, component: AddRepository,  key: 'add-repo-available' }
+  { path: '',       exact: true, component: RepositoryList, key: 'display-repo-list'  },
+  { path: '',       exact: true, component: AddRepository,  key: 'add-repo-available' },
+  { path: '/form',  exact: true, component: RepositoryForm, key: 'form-test' }
 ];
 
 export default function Repositories({ apiClient, match }) {
