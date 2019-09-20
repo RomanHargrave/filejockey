@@ -38,8 +38,8 @@ class Api::Providers::RepositoriesController < ApplicationController
     }
   end
 
-  # Respond with an MSON form specification for the provider configuration
-  def mson
+  # Respond with a JSONSchema form specification for the provider configuration
+  def jsf
     if FileRouter::Repository::Registry.contents.include? params[:id]
       provider   = FileRouter::Repository::Registry.contents[params[:id]]
 

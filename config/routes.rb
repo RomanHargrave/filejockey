@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     namespace :providers do
       get  '/repositories',               to: 'repositories#list'
       get  '/repositories/:id',           to: 'repositories#show', constraints: { id: /[^\/]+/ }
-      get  '/repositories/:id/form',      to: 'repositories#mson', constraints: { id: /[^\/]+/ }
+      get  '/repositories/:id/form',      to: 'repositories#jsf',  constraints: { id: /[^\/]+/ }
       post '/repositories/:id/validate',  to: 'repositories#validate_config', constraints: { id: /[^\/]+/ }
     end
 
