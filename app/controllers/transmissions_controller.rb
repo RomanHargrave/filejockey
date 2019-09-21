@@ -1,2 +1,0 @@
-class TransmissionsController < ApplicationController
-end
