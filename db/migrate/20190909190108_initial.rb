@@ -28,7 +28,7 @@ class Initial < ActiveRecord::Migration[6.0]
     # Job schedules
     create_table :job_schedules, id: :uuid do |t|
       t.belongs_to :job,            type: :uuid, null: false, index: true, comment: 'Job that this schedule will run'
-      t.timestamp  :scheduled_time, null: false, index: true,         comment: '(Next) Scheduled run-time for the job'
+      t.timestamp  :scheduled_time, null: false, index: true,         comment: 'Scheduled run-time for the job, if non-recurring'
       t.boolean    :is_recurring,   null: false, default: true,       comment: 'Whether this is a recurring schedule'
       t.interval   :recur_interval, null: false, default: 15.minutes, comment: 'Interval at which the schedule recurs'
     end
