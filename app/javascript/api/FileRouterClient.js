@@ -5,8 +5,11 @@
 
 import axios from "axios"
 
-import { RepositoryResource, Repository } from './Repository'
-import { RepositoryProviderResource, RepositoryProvider } from './RepositoryProvider'
+// Resources & Models
+import { RepositoryResource } from './Repository'
+import { RepositoryProviderResource } from './RepositoryProvider'
+import { JobResource } from './Job'
+
 
 import ResultPage from './ResultPage'
 
@@ -51,8 +54,9 @@ export default class FileRouterClient {
       transformResponse: [ processResponseEnvelope ]
     });
 
-    this.addResource(RepositoryResource);
     this.addResource(RepositoryProviderResource);
+    this.addResource(RepositoryResource);
+    this.addResource(JobResource);
   }
 
   addResource(cls) {

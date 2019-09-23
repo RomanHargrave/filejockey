@@ -6,9 +6,6 @@ import { MuiForm as RJSForm } from "rjsf-material-ui"
 import FileRouterClient from "api/FileRouterClient"
 
 import {
-  Button,
-  Card,
-  CardContent,
   Checkbox,
   FormControl,
   FormControlLabel,

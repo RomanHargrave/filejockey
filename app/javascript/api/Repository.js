@@ -1,4 +1,5 @@
 import Resource from './Resource'
+import UrlJoin from 'url-join'
 
 /**
  * Repository API Response Model
@@ -13,9 +14,9 @@ export default class Repository {
     this._rep     = rep;
   }
 
-  get id() {
-    return this._id;
-  }
+  get id() { return this._id; }
+
+  // Lifecycle
 
   async reload() {
     if (this._id) {
@@ -25,23 +26,27 @@ export default class Repository {
     }
   }
 
-  get rep() {
-    if (!this._rep) {
-      this.reload();
-    }
-
-    return this._rep;
-  }
-
   async save() {
     const resp = await this.resource.createOrUpdate(this.rep);
     this._rep = resp;
     this._id  = resp.id;
   }
 
-  delete() {
-    this.resource.delete(this.rep);
+  async delete() {
+    await this.resource.delete(this.rep);
   }
+
+  get rep() {
+    if (!this._rep) {
+      this.reload(); // will this race? ¯\_(ツ)_/¯
+    }
+
+    return this._rep;
+  }
+
+  // Properties
+
+  get isNew() { return this._id === undefined; }
 
   get providerId() { return this.rep.provider_id; }
   set providerId(id) {
@@ -55,7 +60,6 @@ export default class Repository {
   get name() { return this.rep.name; }
   set name(n) { this.rep.name = n; }
 
-  get isNew() { return this._id === undefined; }
 
   setName(n) {
     this.name = n;
@@ -101,19 +105,19 @@ export default class Repository {
  */
 export class RepositoryResource extends Resource {
 
-  static get resourcePath() { return "/repositories"; }
-
   get name() { return "Repository"; }
 
   constructor(params) {
     super(params);
   }
 
+  get resourcePath() { return "/repositories"; }
+
   findRep(criteria, params) {
     return this.client.requestPaged({
       request: {
-        url: RepositoryResource.resourcePath,
-        params: Object.assign({ criteria: criteria }, params)
+        url: this.resourcePath,
+        params: {...params, criteria: criteria }
       }
     });
   }
@@ -122,7 +126,7 @@ export class RepositoryResource extends Resource {
     const pagedRequest = this.findRep(criteria, params);
     pagedRequest.transform =
       (data) =>
-        data.map((rep) => 
+        data.map((rep) =>
           new Repository({
             id: rep.id,
             rep: rep,
@@ -131,19 +135,16 @@ export class RepositoryResource extends Resource {
     return pagedRequest;
   }
 
-  async getRep(criteria, params) {
-    const { id } = criteria;
-
+  async getRep({ id }, params) {
     const result = await this.client.request({
-      url: `${RepositoryResource.resourcePath}/${id}`,
+      url: UrlJoin(this.resourcePath, id),
       params: params || {}
     });
 
     return result.data;
   }
 
-  get(criteria) {
-    const { id } = criteria;
+  get({ id }) {
     return new Repository({
       id: id,
       resource: this,
@@ -155,7 +156,7 @@ export class RepositoryResource extends Resource {
     if (rep.id) {
       const resp = await this.client.request({
         method: 'PUT',
-        url: `${RepositoryResource.resourcePath}/${rep.id}`,
+        url: UrlJoin(this.resourcePath, rep.id),
         data: rep
       });
 
@@ -163,7 +164,7 @@ export class RepositoryResource extends Resource {
     } else {
       const resp = await this.client.request({
         method: 'POST',
-        url: RepositoryResource.resourcePath,
+        url: this.resourcePath,
         data: rep
       });
 
@@ -175,8 +176,10 @@ export class RepositoryResource extends Resource {
     if (rep.id) {
       await this.client.request({
         method: 'DELETE',
-        url: `${RepositoryResource.resourcePath}/${rep.id}`
+        url: UrlJoin(this.resourcePath, rep.id)
       });
+    } else {
+      throw "delete must be passed a representation containing the Repository ID";
     }
   }
 }

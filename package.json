@@ -16,6 +16,7 @@
     "clsx": "^1.0.4",
     "date-fns": "2.0.0-alpha.27",
     "material-table": "^1.50.0",
+    "material-ui-chip-input": "^1.0.0",
     "material-ui-pickers": "^2.2.4",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",

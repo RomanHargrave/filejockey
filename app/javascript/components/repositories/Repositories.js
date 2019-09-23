@@ -13,9 +13,9 @@ import { Add as AddIcon } from '@material-ui/icons'
 
 import CornerFAB from 'components/shared/CornerFAB'
 import GenerateRoutes from 'components/shared/GenerateRoutes'
-import RepositoryForm from './RepositoryForm'
 
 // Route components
+import RepositoryForm from './RepositoryForm'
 import RepositoryList from './RepositoryList'
 
 // API
@@ -42,7 +42,6 @@ function Overview({ apiClient }) {
       });
 
       await newRepo.save();
-      console.log(newRepo);
 
       listTableRef.current.onQueryChange();
       setOpen(false);
