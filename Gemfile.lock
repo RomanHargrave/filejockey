@@ -132,7 +132,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (5.2.0)
     nio4r (2.5.1)
-    nokogiri (1.10.5)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     pagy (3.5.1)
     pg (1.1.4)
